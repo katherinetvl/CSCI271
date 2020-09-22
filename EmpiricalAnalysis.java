@@ -73,12 +73,12 @@ public class EmpiricalAnalysis
     {
         int count = 0; 
 
-        for (int i = 0; i < arr.length - 1; i++)
+        for (int i = 1; i < (arr.length - 1); i++)
         {
             int v = arr[i];
-            int j = arr.length - 1;
+            int j = i - 1;
 
-            while (j > 0 && arr[j] > v)
+            while (j >= 0 && arr[j] > v)
             {
                 arr[j + 1] = arr[j];
                 j = j - 1;
