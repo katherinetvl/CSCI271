@@ -17,11 +17,12 @@ public class EmpiricalAnalysis
             arr1[y] = RandomInt(10);
         }
 
-        // Invoke SortAnalysis 
+        // Invoke SortAnalysis for random array 
         int result = SortAnalysis(arr1);
 
         // Output size and SortAnalysis count
-        System.out.println("n: " + "\t" + "M: ");
+        System.out.println("Randomly generated int arrays:");
+        System.out.println("n " + "\t" + "M ");
         System.out.println(arr1.length + "\t" + result);
 
         /* Test array contents by printing 
@@ -32,14 +33,20 @@ public class EmpiricalAnalysis
         System.out.println(); 
         */
 
-        int[] arr2 = new int[4];
-        System.out.println(arr2.length + "\n");
-
-        // Generate ascending array 
+        int[] arr2 = new int[8];
+         // Generate ascending array 
         for (int y = 0; y < arr2.length; y++)
         {
             arr2[y] = y;
         }
+
+        // Invoke SortAnalysis for ascending array
+        int result2 = SortAnalysis(arr2);
+
+        // Output size and SortAnalysis count
+        System.out.println("\n" + "Ascending int arrays:");
+        System.out.println("n " + "\t" + "M ");
+        System.out.println(arr2.length + "\t" + result2);
 
         /* Test array contents by printing 
         for (int z = 0; z < arr2.length; z++)
@@ -49,14 +56,20 @@ public class EmpiricalAnalysis
         System.out.println(); 
         */
 
-        int[] arr3 = new int[8];
-        System.out.println(arr3.length + "\n");
-
+        int[] arr3 = new int[16];
         // Generate descending array 
         for (int y = arr3.length - 1; y > 0; y--)
         {
             arr3[y] = y;
         }
+
+        // Invoke SortAnalysis for descending array
+        int result3 = SortAnalysis(arr3);
+
+        // Output size and SortAnalysis count
+        System.out.println("\n" + "Ascending int arrays:");
+        System.out.println("n " + "\t" + "M ");
+        System.out.println(arr3.length + "\t" + result3);
 
         /* Test array contents by printing 
         for (int z = 0; z < arr3.length; z++)
