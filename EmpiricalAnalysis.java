@@ -11,8 +11,6 @@ public class EmpiricalAnalysis
     public static void main(String[] args) 
     {
         int[] arr1 = new int[10];
-        System.out.println(arr1.length + "\n");
-
         // Generate random array 
         for (int y = 0; y < arr1.length; y++)
         {
@@ -21,7 +19,10 @@ public class EmpiricalAnalysis
 
         // Invoke SortAnalysis 
         int result = SortAnalysis(arr1);
-        System.out.println(result + "\n");
+
+        // Output size and SortAnalysis count
+        System.out.println("n: " + "\t" + "M: ");
+        System.out.println(arr1.length + "\t" + result);
 
         /* Test array contents by printing 
         for (int z = 0; z < arr1.length; z++)
@@ -82,6 +83,9 @@ public class EmpiricalAnalysis
             {
                 arr[j + 1] = arr[j];
                 j = j - 1;
+            }
+            if (j >= 0)
+            {
                 count = count + 1;
             }
             arr[j + 1] = v;
