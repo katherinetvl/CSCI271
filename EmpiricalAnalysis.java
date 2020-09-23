@@ -173,8 +173,9 @@ public class EmpiricalAnalysis
 
         // Output size and SortAnalysis count
         System.out.println("Randomly generated int arrays:");
-        System.out.println("n " + "\t" + "M ");
+        // System.out.println("n " + "\t" + "M "); 
         // System.out.println(arr1.length + "\t" + result);
+        /* Not easy to copy and paste to Excel
         System.out.println(arrAA.length + "\t" + resultAA);
         System.out.println(arrAB.length + "\t" + resultAB);
         System.out.println(arrAC.length + "\t" + resultAC);
@@ -195,6 +196,50 @@ public class EmpiricalAnalysis
         System.out.println(arrAR.length + "\t" + resultAR);
         System.out.println(arrAS.length + "\t" + resultAS);
         System.out.println(arrAT.length + "\t" + resultAT);
+        */
+        System.out.println("n "); 
+        System.out.println(arrAA.length);
+        System.out.println(arrAB.length);
+        System.out.println(arrAC.length);
+        System.out.println(arrAD.length);
+        System.out.println(arrAE.length);
+        System.out.println(arrAF.length);
+        System.out.println(arrAG.length);
+        System.out.println(arrAH.length);
+        System.out.println(arrAI.length);
+        System.out.println(arrAJ.length);
+        System.out.println(arrAK.length);
+        System.out.println(arrAL.length);
+        System.out.println(arrAM.length);
+        System.out.println(arrAN.length);
+        System.out.println(arrAO.length);
+        System.out.println(arrAP.length);
+        System.out.println(arrAQ.length);
+        System.out.println(arrAR.length);
+        System.out.println(arrAS.length);
+        System.out.println(arrAT.length);
+
+        System.out.println("M "); 
+        System.out.println(resultAA);
+        System.out.println(resultAB);
+        System.out.println(resultAC);
+        System.out.println(resultAD);
+        System.out.println(resultAE);
+        System.out.println(resultAF);
+        System.out.println(resultAG);
+        System.out.println(resultAH);
+        System.out.println(resultAI);
+        System.out.println(resultAJ);
+        System.out.println(resultAK);
+        System.out.println(resultAL);
+        System.out.println(resultAM);
+        System.out.println(resultAN);
+        System.out.println(resultAO);
+        System.out.println(resultAP);
+        System.out.println(resultAQ);
+        System.out.println(resultAR);
+        System.out.println(resultAS);
+        System.out.println(resultAT);
 
         /*
         // Print random array after SortAnalysis 
@@ -208,20 +253,62 @@ public class EmpiricalAnalysis
 /********************************************
 Ascending arrays
 ********************************************/
+        // Generate ascending array
+        /* 
         int[] arr2 = new int[8];
-         // Generate ascending array 
         for (int a = 0; a < arr2.length; a++)
         {
             arr2[a] = a;
         }
+        */
+
+        int[] arrBA = new int[1000];
+        for (int a = 0; a < arrBA.length; a++)
+        {
+            arrBA[a] = a;
+        }
+
+        int[] arrBB = new int[2000];
+        for (int b = 0; b < arrBB.length; b++)
+        {
+            arrBB[b] = b;
+        }
+
+        int[] arrBC = new int[3000];
+        for (int c = 0; c < arrBC.length; c++)
+        {
+            arrBC[c] = c;
+        }
+
+        int[] arrBD = new int[4000];
+        for (int d = 0; d < arrBD.length; d++)
+        {
+            arrBD[d] = d;
+        }
+
+        int[] arrBE = new int[5000];
+        for (int e = 0; e < arrBE.length; e++)
+        {
+            arrAE[e] = e;
+        }
 
         // Invoke SortAnalysis for ascending array
-        int result2 = SortAnalysis(arr2);
+        // int result2 = SortAnalysis(arr2);
+        int resultBA = SortAnalysis(arrBA);
+        int resultBB = SortAnalysis(arrBB);
+        int resultBC = SortAnalysis(arrBC);
+        int resultBD = SortAnalysis(arrBD);
+        int resultBE = SortAnalysis(arrBE);
 
         // Output size and SortAnalysis count
         System.out.println("\n" + "Ascending int arrays:");
         System.out.println("n " + "\t" + "M ");
-        System.out.println(arr2.length + "\t" + result2);
+        // System.out.println(arr2.length + "\t" + result2);
+        System.out.println(arrBA.length + "\t" + resultBA);
+        System.out.println(arrBB.length + "\t" + resultBB);
+        System.out.println(arrBC.length + "\t" + resultBC);
+        System.out.println(arrBD.length + "\t" + resultBD);
+        System.out.println(arrBE.length + "\t" + resultBE);
 
         /*
         // Print ascending array after SortAnalysis  
@@ -237,18 +324,60 @@ Descending arrays
 ********************************************/
         int[] arr3 = new int[16];
         // Generate descending array 
+        /*
         for (int a = arr3.length - 1; a > 0; a--)
         {
             arr3[a] = a;
         }
+        */
+
+        int[] arrCA = new int[1000];
+        for (int a = arrCA.length - 1; a > 0; a--)
+        {
+            arrCA[a] = a;
+        }
+
+        int[] arrCB = new int[2000];
+        for (int b = arrCB.length - 1; b > 0; b--)
+        {
+            arrCB[b] = b;
+        }
+
+        int[] arrCC = new int[3000];
+        for (int c = arrCC.length - 1; c > 0; c--)
+        {
+            arrCC[c] = c;
+        }
+
+        int[] arrCD = new int[4000];
+        for (int d = arrCD.length - 1; d > 0; d--)
+        {
+            arrCD[d] = d;
+        }
+
+        int[] arrCE = new int[5000];
+        for (int e = arrCE.length - 1; e > 0; e--)
+        {
+            arrCE[e] = e;
+        }
 
         // Invoke SortAnalysis for descending array
-        int result3 = SortAnalysis(arr3);
+        // int result3 = SortAnalysis(arr3);
+        int resultCA = SortAnalysis(arrCA);
+        int resultCB = SortAnalysis(arrCB);
+        int resultCC = SortAnalysis(arrCC);
+        int resultCD = SortAnalysis(arrCD);
+        int resultCE = SortAnalysis(arrCE);
 
         // Output size and SortAnalysis count
         System.out.println("\n" + "Ascending int arrays:");
         System.out.println("n " + "\t" + "M ");
-        System.out.println(arr3.length + "\t" + result3);
+        // System.out.println(arr3.length + "\t" + result3);
+        System.out.println(arrCA.length + "\t" + resultCA);
+        System.out.println(arrCB.length + "\t" + resultCB);
+        System.out.println(arrCC.length + "\t" + resultCC);
+        System.out.println(arrCD.length + "\t" + resultCD);
+        System.out.println(arrCE.length + "\t" + resultCE);
 
         /*
         // Print descending array after SortAnalysis 
