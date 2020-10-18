@@ -12,40 +12,83 @@ public class WordFind
     // Create input stream from first argument (txt file)
         if (args.length > 0)
         {
-            File theFile = new File(args[0]);
+            File gridFile = new File(args[0]);
             String strCurr = null;
 
             try 
             {
-                Scanner fileInput = new Scanner(theFile);
-                // String s = fileInput.nextLine();
-                while (fileInput.hasNextLine())
+                Scanner fin = new Scanner(gridFile);
+                while (fin.hasNextLine())
                 {
                     // rowSize++;
-                    strCurr = fileInput.nextLine();
-
-                    
-
+                    strCurr = fin.nextLine();
+                    rowSize++;
+                    colSize++;
                     System.out.println(strCurr);
                 }
 
-    // Close file
-            fileInput.close();
-            } catch (IOException e)
+            // Close file
+            fin.close();
+            } catch (IOException e) 
             {
                 e.printStackTrace();
-                System.out.println("An error occurred with opening word grid file.");
+                System.out.println("An error occurred with opening grid file.");
             }
-        }
+
+            if (args.length > 1)
+            {
+                File searchForFile = new File(args[1]);
+                String strCurr2 = null;
+
+                try 
+                {
+                    Scanner fin2 = new Scanner(searchForFile);
+                    while (fin2.hasNextLine())
+                    {
+                        strCurr2 = fin2.nextLine();
+                        System.out.println(strCurr2);
+                    }
+
+                fin2.close();
+                } catch (IOException e) // end of try 
+                {
+                    e.printStackTrace();
+                    System.out.println("An error occurred with opening word(s) to search file.");
+                } // end for catch
+            }
+            else 
+            {
+                System.out.println("Enter word to search: ");
+                System.out.println("Enter 'quit' to exit program.");
+                try 
+                {
+                    Scanner input = new Scanner(System.in);
+                    while (input.hasNextLine())
+                    {
+                        String wordToSearch = input.next();
+                        String wordToSearchLower = wordToSearch.toLowerCase(); 
+                        if(!(wordToSearchLower.equals("quit")))
+                        {
+                            System.out.println("Word To Search is: " + wordToSearchLower + "\n");
+                        }
+                        else 
+                        {
+                            System.exit(0);
+                        }
+                    }
+                // input.close();
+                } catch(Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+            }
+
+        } // end for "if there are arguments in command line" 
 
     // Prompt user for word to search if no file given
         else
         {
-            System.out.println("Enter word to search: ");
-            Scanner input = new Scanner(System.in);
-
-            String wordToSearch = input.next(); 
-            System.out.println("Word To Search is: " + wordToSearch + "\n");
+            System.out.println("Please run program with at least one file - the grid.");
         }
 
     }
@@ -53,18 +96,17 @@ public class WordFind
 
 // Functions 
 /**********************************************
-* Function Name: ScanWordGrid
-* Description: Function attempts to open text file and process through char grid
-* Input: Command line argument file
-* Output: Char grid has been read 
-***********************************************/
-public static void ScanWordGrid(String[] cmdLineArgument) 
+* Function Name: AlphaOnlyString
+* Description: Building a string of just alpha characters 
+* Input: StringExisting, FileString
+* Output: StringExisting with only alpha chars of FileString concatenated on
+**********************************************
+public static void ScanWordGrid(Char[] allChars, String fileLine) 
 {
 
-}
-// Deep Copy every string 
+} */
 
-// Obtain row and col (i and j values )
+// Obtain row and col (i and j values)
 
 // Convert string to char array 
 
