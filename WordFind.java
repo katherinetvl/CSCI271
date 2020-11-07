@@ -2,7 +2,6 @@ import java.io.File; // For File use
 import java.io.IOException; // For File errors
 import java.util.Scanner; // For Scanner use   
 import java.util.ArrayList; // For ArrayList use 
-import java.util.Arrays; 
 
 public class WordFind
 {
@@ -80,7 +79,6 @@ public class WordFind
 
                     increment++;
                 }
-                // System.out.print("\n");
             }
 
 /***********************************************************
@@ -100,19 +98,9 @@ public class WordFind
                     {
                         strCurr2 = fin2.nextLine();
                         // System.out.println(strCurr2);
-                        tempChange2 = strCurr.replaceAll("[^A-Za-z]+", "");
+                        tempChange2 = strCurr2.replaceAll("[^A-Za-z]+", "");
 
-                        /* The 8 directions 
-                        boolean isEast = false; 
-                        boolean isWest = false;
-                        boolean isSouth = false;
-                        boolean isNorth = false;
-                        boolean isSW = false;
-                        boolean isNE = false;
-                        boolean isSE = false;
-                        boolean isNW = false;
-                        */
-
+                        System.out.println("Word to search: " + tempChange2);
 /***********************************************************************************
  * Obtain text horizontally, toward right 
  ***********************************************************************************/
@@ -120,49 +108,47 @@ public class WordFind
                         for (int r = 0; r < rowSize; r++)
                         {
                             char[] eastChar= wordGrid[r];
-                            // String eastT = new String();
                             String eastText = null;
                             eastText = (String.valueOf(eastChar));
-                            // Search for pattern 
-                            int[] resultEast = getIndexAndCount(eastText, tempChange2);
-                            if (resultEast[0] > -1)
-                            {
-                                // isEast = true;
-                                resultEast[2] = r;
-                                System.out.println(strCurr2 + " was found starting at " + resultEast[2] + "," + resultEast[0] + " and oriented East (" + resultEast[1] + ")");
-                                break;
-                            }
-                            else 
-                            {
-                                int sumOfComparisons = resultEast[1] * rowSize -1;
-                                updateComparisonSumString(comparisonSumString, sumOfComparisons);
-                            }
+
+                            // System.out.print("East text: " + eastText + "\n");
+                            // Search for pattern
+                            do {
+                                int[] resultEast = getIndexAndCount(eastText, tempChange2);
+                                if(resultEast[0] > 0)
+                                { 
+                                    resultEast[2] = r; 
+                                    System.out.println(strCurr2 + " was found starting at " + resultEast[2] + "," + resultEast[0] + " and oriented East (" + resultEast[1] + ")");
+                                    break;
+                                }
+                                r++;
+                            } while (r < rowSize);
                         }
 /***********************************************************************************
  * Obtain text horizontally, toward left 
  ***********************************************************************************/
                         // isWest
-                        for (int r = 0; r < rowSize; r++)
+                        for (int left = 0; left < rowSize; left++)
                         {
-                            char[] eastChar = wordGrid[r]; 
-                            //String eastT = new String();
+                            char[] eastChar = wordGrid[left]; 
                             String eastText = null;
                             eastText = (String.valueOf(eastChar));
                             String westText = reverseString(eastText);
 
+                            // System.out.print("West text: " + westText + "\n");
+
                             // Search for pattern 
-                            int[] resultWest = getIndexAndCount(westText, tempChange2);
-                            if (resultWest[0] > -1)
-                            {
-                                //isWest = true;
-                                resultWest[2] = r;
-                                System.out.println(strCurr2 + " was found starting at " + resultWest[2] + "," + resultWest[0] + " and oriented West (" + resultWest[1] + ")");
-                                break;
-                            }
-                            else 
-                            {
-                                int sumOfComparisons = resultWest[1] * rowSize -1; 
-                            }
+                            do {
+                                int[] resultWest = getIndexAndCount(westText, tempChange2);
+                                if(resultWest[0] > 0)
+                                { 
+                                    resultWest[2] = left - resultWest[0]; 
+                                    System.out.println(strCurr2 + " was found starting at " + resultWest[2] + "," + resultWest[0] + " and oriented West (" + resultWest[1] + ")");
+                                    break;
+                                }
+                                left++;
+                            } while (left < rowSize);
+
                         }
 /***********************************************************************************
  * Transpose 2D char array for access to column elements as rows   
@@ -182,282 +168,82 @@ public class WordFind
  * Obtain vertical text horizontally, toward south  
  ***********************************************************************************/
                         // isSouth
-                        for (int r = 0; r < newRS; r++)
+                        for (int down = 0; down < newRS; down++)
                         {
-                            char[] southChar = transposedWG[r]; 
-                            //String southT = new String();
+                            char[] southChar = transposedWG[down]; 
                             String southText = null;
                             southText = (String.valueOf(southChar));
 
+                            // System.out.print("South text " + southText + "\n");
+
                             // Search for pattern 
                             int[] resultSouth = getIndexAndCount(southText, tempChange2);
-                            if (resultSouth[0] > -1)
+                            if (resultSouth[0] > 0)
                             {
-                                isSouth = true;
-                                resultSouth[2] = r;
-                                System.out.println(strCurr2 + " was found starting at " + resultSouth[2] + "," + resultSouth[0] + " and oriented South (" + resultSouth[1] + ")");
+                                resultSouth[2] = down + 1;
+                                System.out.println(strCurr2 + " was found starting at " + resultSouth[0] + "," + resultSouth[2] + " and oriented South (" + resultSouth[1] + ")");
                                 break;
                             }
                             else 
                             {
                                 int sumOfComparisons = resultSouth[1] * newRS -1; 
+                                updateComparisonSumString(comparisonSumString, sumOfComparisons);
                             }
                         }
 /***********************************************************************************
  * Obtain vertical text horizontally, toward north 
  ***********************************************************************************/
                         // isNorth
-                        for (int r = 0; r < newRS; r++)
+                        for (int up = 0; up < newRS; up++)
                         {
-                            char[] southChar = transposedWG[r]; 
-                            String southT = new String();
+                            char[] southChar = transposedWG[up]; 
                             String southText = null;
-                            southText = (String.valueOf(southT));
+                            southText = (String.valueOf(southChar));
                             String northText = reverseString(southText);
+
+                            System.out.println("North text: " + northText); 
 
                             // Search for pattern 
                             int[] resultNorth = getIndexAndCount(northText, tempChange2);
-                            if (resultNorth[0] > -1)
+                            if (resultNorth[0] > 0)
                             {
-                                isNorth = true;
-                                resultNorth[2] = r;
-                                System.out.println(strCurr2 + " was found starting at " + resultNorth[2] + "," + resultNorth[0] + " and oriented North (" + resultNorth[1] + ")");
+                                resultNorth[2] = up + resultNorth[0];
+                                System.out.println(strCurr2 + " was found starting at " + up + "," + resultNorth[2] + " and oriented North (" + resultNorth[1] + ")");
                                 break;
                             }
                             else 
                             {
-                                int sumOfComparisons = resultNorth[1] * newRS -1; 
+                                int sumOfComparisons = resultNorth[1] * newRS -1;
+                                updateComparisonSumString(comparisonSumString, sumOfComparisons); 
                             }
                         }
 /***********************************************************************************
  * Obtain text diagonally, toward southwest
  ***********************************************************************************/
                         // isSW
-                        // Track 2D char grid size 
-                        int N = wordGrid.length;
-                        int M = wordGrid[0].length;
 
-                        // Create an arraylist to hold anti diagonals 
-                        ArrayList<Character> intermediate = new ArrayList<Character>();
-
-                        for (int d = 0; d < N + M - 1; d++) 
-                        {
-                            intermediate.clear();
-                            
-                            int r = d < M ? 0 : d - M + 1;
-                            int c = d < M ? d : M - 1;
-                            
-                            while (r < N && c > -1) 
-                            {
-                                intermediate.add(wordGrid[r][c]);
-                                r++;
-                                c--;
-                            }
-                            // Intermediate is an arraylist object 
-                            // System.out.println("Intermediate" + intermediate);
-                            // System.out.println(reverseArrayList(intermediate));
-                            
-                            // Convert arraylist into string
-                            String finalString = getString(intermediate);
-
-                            // Search for pattern 
-                            int[] resultSW = getIndexAndCount(finalString, tempChange2);
-                            if (resultSW[0] > -1)
-                            {
-                                isSW = true;
-                                resultSW[2] = r;
-                                System.out.println(strCurr2 + " was found starting at " + resultSW[2] + "," + resultSW[0] + " and oriented Southwest (" + resultSW[1] + ")");
-                                break;
-                            }
-                            else 
-                            {
-                                int sumOfComparisons = resultSW[1] * finalString.length(); 
-                            }
-                        }
 /***********************************************************************************
  * Obtain text diagonally, toward northeast
  ***********************************************************************************/
                         // isNE
-                        // Create an arraylist to hold anti diagonals 
-                        ArrayList<Character> intermediate2 = new ArrayList<Character>();
 
-                        for (int d = 0; d < N + M - 1; d++) 
-                        {
-                            intermediate.clear();
-                            
-                            int r = d < M ? 0 : d - M + 1;
-                            int c = d < M ? d : M - 1;
-                            
-                            while (r < N && c > -1) 
-                            {
-                                intermediate.add(wordGrid[r][c]);
-                                r++;
-                                c--;
-                            }
-                            intermediate2 = reverseArrayList(intermediate);
-                            String finalString2 = getString(intermediate2);
-
-                            // Search for pattern 
-                            int[] resultNE = getIndexAndCount(finalString2, tempChange2);
-                            if (resultNE[0] > -1)
-                            {
-                                isNE = true;
-                                resultNE[2] = r;
-                                System.out.println(strCurr2 + " was found starting at " + resultNE[2] + "," + resultNE[0] + " and oriented Northeast (" + resultNE[1] + ")");
-                                break;
-                            }
-                            else 
-                            {
-                                int stringLength = finalString2.length();
-                                int sumOfComparisons = resultNE[1] * stringLength; 
-                            }
-                        }
 /***********************************************************************************
  * Obtain text diagonally, toward northwest
  ***********************************************************************************/
-                        String majorDiagonal = "";
-                        String minorDiagonal = "";
-                        int m = rowSize;
-                        int n = colSize; 
-                        char currChar = 'x';
-                        String charStr = "";
-
-                        for(int k = 0; k < m; k++)
-                        {
-                            int i = k; 
-                            int j = 0;
-                            
-                            while (i > 0 && j <= n - 1)
-                            {
-                                currChar = wordGrid[i][j];
-                                charStr = Character.toString(currChar);
-                                majorDiagonal = majorDiagonal.concat(charStr);
-                                i--;
-                                j++;
-                            }
-
-                            // Search for pattern 
-                            int[] resultNW = getIndexAndCount(majorDiagonal, tempChange2);
-                            if (resultNW[0] > -1)
-                            {
-                                isNW = true;
-                                resultNW[2] = m;
-                                System.out.println(strCurr2 + " was found starting at " + resultNW[2] + "," + resultNW[0] + " and oriented Northwest (" + resultNW[1] + ")");
-                                break;
-                            }
-                            else 
-                            {
-                                int stringLength = majorDiagonal.length();
-                                int sumOfComparisons = resultNW[1] * stringLength; 
-                            }
-                        }
-
-                        for (int k = 0; k < n -1; k++)
-                        {
-                            int i = m - 1;
-                            int j = k; 
-                            
-                            while(j <= n - 1)
-                            {
-                                currChar = wordGrid[i][j];
-                                charStr = Character.toString(currChar);
-                                minorDiagonal = minorDiagonal.concat(charStr);
-                                i--;
-                                j++;
-                            }
-                            // Search for pattern 
-                            int[] resultNW = getIndexAndCount(minorDiagonal, tempChange2);
-                            if (resultNW[0] > -1)
-                            {
-                                isNW = true;
-                                resultNW[2] = m;
-                                System.out.println(strCurr2 + " was found starting at " + resultNW[2] + "," + resultNW[0] + " and oriented Northwest (" + resultNW[1] + ")");
-                                break;
-                            }
-                            else 
-                            {
-                                int stringLength = minorDiagonal.length();
-                                int sumOfComparisons = resultNW[1] * stringLength; 
-                            }
-                        }
+                        // is NW
 /***********************************************************************************
  * Obtain text diagonally, toward southeast
  ***********************************************************************************/
                         // is SE
-                            for(int k = 0; k < m; k++)
-                            {
-                                int i = k; 
-                                int j = 0;
-                                
-                                while (i > 0 && j <= n - 1)
-                                {
-                                    currChar = wordGrid[i][j];
-                                    charStr = Character.toString(currChar);
-                                    majorDiagonal = majorDiagonal.concat(charStr);
-                                    i--;
-                                    j++;
-                                }
-
-                                // Search for pattern 
-                                String revMajorDiagonal = reverseString(majorDiagonal);
-                                int[] resultSE = getIndexAndCount(revMajorDiagonal, tempChange2);
-                                if (resultSE[0] > -1)
-                                {
-                                    isSE = true;
-                                    resultSE[2] = m;
-                                    System.out.println(strCurr2 + " was found starting at " + resultSE[2] + "," + resultSE[0] + " and oriented Southeast (" + resultSE[1] + ")");
-                                    break;
-                                }
-                                else 
-                                {
-                                    int stringLength = majorDiagonal.length();
-                                    int sumOfComparisons = resultSE[1] * stringLength; 
-                                }
-                            }
-                            for (int k = 0; k < n -1; k++)
-                            {
-                                int i = m - 1;
-                                int j = k; 
-                                
-                                while(j <= n - 1)
-                                {
-                                    currChar = wordGrid[i][j];
-                                    charStr = Character.toString(currChar);
-                                    minorDiagonal = minorDiagonal.concat(charStr);
-                                    i--;
-                                    j++;
-                                }
-                                // Search for pattern 
-                                String revMinorDiagonal = reverseString(minorDiagonal);
-                                int[] resultSE = getIndexAndCount(minorDiagonal, tempChange2);
-                                if (resultSE[0] > -1)
-                                {
-                                    isSE = true;
-                                    resultSE[2] = m;
-                                    System.out.println(strCurr2 + " was found starting at " + resultSE[2] + "," + resultSE[0] + " and oriented Southeast (" + resultSE[1] + ")");
-                                    break;
-                                }
-                                else 
-                                {
-                                    int stringLength = revMinorDiagonal.length();
-                                    int sumOfComparisons = resultSE[1] * stringLength; 
-                                }
-                            }
-
-
+                            
 /***********************************************************************************
  * Final determinants
  ***********************************************************************************/
                         //End of searches. Unfound.
-                        String justZero = "0";
-                        if(!comparisonSumString.equals(justZero))
-                        {
-                            int i = Integer.parseInt(comparisonSumString);
-                            System.out.println(strCurr2 + " was not found. (" + i + ")");
-                        }
+
                     } // This ends [while (fin2.hasNextLine())]
 
-                fin2.close();
+                    fin2.close();
                 } catch (IOException e) 
                 {
                     e.printStackTrace();
@@ -481,338 +267,10 @@ public class WordFind
                         if(!(wordCaps.equals("QUIT")))
                         {
                             System.out.println("Word To Search is: " + wordCaps + "\n");
-                            String tempChange3 = wordCaps.replaceAll("[^A-Za-z]+", "");
+                            // String tempChange3 = wordCaps.replaceAll("[^A-Za-z]+", "");
 
-                            // The 8 directions 
-                            boolean isEast = false; 
-                            boolean isWest = false;
-                            boolean isSouth = false;
-                            boolean isNorth = false;
-                            boolean isSW = false;
-                            boolean isNE = false;
-                            boolean isSE = false;
-                            boolean isNW = false;
-    
                             // isEast
-                            for (int r = 0; r < rowSize; r++)
-                            {
-                                char[] eastChar= wordGrid[r];
-                                String eastT = new String();
-                                String eastText = null;
-                                eastText = (String.valueOf(eastT));
-                                // Search for pattern 
-                                int[] resultEast = getIndexAndCount(eastText, tempChange3);
-                                if (resultEast[0] > -1)
-                                {
-                                    isEast = true;
-                                    resultEast[2] = r;
-                                    System.out.println(wordIn + " was found starting at " + resultEast[2] + "," + resultEast[0] + " and oriented East (" + resultEast[1] + ")");
-                                    break;
-                                }
-                                else 
-                                {
-                                    int sumOfComparisons = resultEast[1] * rowSize -1;
-                                    updateComparisonSumString(comparisonSumString, sumOfComparisons);
-                                }
-                            }
 
-                            // isWest
-                            for (int r = 0; r < rowSize; r++)
-                            {
-                                char[] eastChar = wordGrid[r]; 
-                                String eastT = new String();
-                                String eastText = null;
-                                eastText = (String.valueOf(eastT));
-                                String westText = reverseString(eastText);
-    
-                                // Search for pattern 
-                                int[] resultWest = getIndexAndCount(westText, tempChange3);
-                                if (resultWest[0] > -1)
-                                {
-                                    isWest = true;
-                                    resultWest[2] = r;
-                                    System.out.println(wordIn + " was found starting at " + resultWest[2] + "," + resultWest[0] + " and oriented West (" + resultWest[1] + ")");
-                                    break;
-                                }
-                                else 
-                                {
-                                    int sumOfComparisons = resultWest[1] * rowSize -1; 
-                                }
-                            }
-                        
-                            // transpose 
-                            int newRS = colSize;
-                            int newCS = rowSize;
-                            char[][] transposedWG = new char[newRS][newCS];
-    
-                            for(int i= 0; i < colSize; i++)
-                            {
-                                for(int j = 0; j < rowSize; j++)
-                                {
-                                    transposedWG[i][j] = wordGrid[j][i];
-                                }
-                            }
-
-                            // isSouth
-                            for (int r = 0; r < newRS; r++)
-                            {
-                                char[] southChar = transposedWG[r]; 
-                                String southT = new String();
-                                String southText = null;
-                                southText = (String.valueOf(southT));
-    
-                                // Search for pattern 
-                                int[] resultSouth = getIndexAndCount(southText, tempChange3);
-                                if (resultSouth[0] > -1)
-                                {
-                                    isSouth = true;
-                                    resultSouth[2] = r;
-                                    System.out.println(wordIn + " was found starting at " + resultSouth[2] + "," + resultSouth[0] + " and oriented South (" + resultSouth[1] + ")");
-                                    break;
-                                }
-                                else 
-                                {
-                                    int sumOfComparisons = resultSouth[1] * newRS -1; 
-                                }
-                            }
-
-                            // isNorth
-                            for (int r = 0; r < newRS; r++)
-                            {
-                                char[] southChar = transposedWG[r]; 
-                                String southT = new String();
-                                String southText = null;
-                                southText = (String.valueOf(southT));
-                                String northText = reverseString(southText);
-    
-                                // Search for pattern 
-                                int[] resultNorth = getIndexAndCount(northText, tempChange3);
-                                if (resultNorth[0] > -1)
-                                {
-                                    isNorth = true;
-                                    resultNorth[2] = r;
-                                    System.out.println(wordIn + " was found starting at " + resultNorth[2] + "," + resultNorth[0] + " and oriented North (" + resultNorth[1] + ")");
-                                    break;
-                                }
-                                else 
-                                {
-                                    int sumOfComparisons = resultNorth[1] * newRS -1; 
-                                }
-                            }
-
-                            // isSW
-                            // Track 2D char grid size 
-                            int N = wordGrid.length;
-                            int M = wordGrid[0].length;
-    
-                            // Create an arraylist to hold anti diagonals 
-                            ArrayList<Character> intermediate = new ArrayList<Character>();
-    
-                            for (int d = 0; d < N + M - 1; d++) 
-                            {
-                                intermediate.clear();
-                                
-                                int r = d < M ? 0 : d - M + 1;
-                                int c = d < M ? d : M - 1;
-                                
-                                while (r < N && c > -1) 
-                                {
-                                    intermediate.add(wordGrid[r][c]);
-                                    r++;
-                                    c--;
-                                }
-                                // Intermediate is an arraylist object 
-                                // System.out.println("Intermediate" + intermediate);
-                                // System.out.println(reverseArrayList(intermediate));
-                                
-                                // Convert arraylist into string
-                                String finalString = getString(intermediate);
-    
-                                // Search for pattern 
-                                int[] resultSW = getIndexAndCount(finalString, tempChange3);
-                                if (resultSW[0] > -1)
-                                {
-                                    isSW = true;
-                                    resultSW[2] = r;
-                                    System.out.println(wordIn + " was found starting at " + resultSW[2] + "," + resultSW[0] + " and oriented Southwest (" + resultSW[1] + ")");
-                                    break;
-                                }
-                                else 
-                                {
-                                    int sumOfComparisons = resultSW[1] * finalString.length(); 
-                                }
-                            }
-
-                            // isNE
-                            // Create an arraylist to hold anti diagonals 
-                            ArrayList<Character> intermediate2 = new ArrayList<Character>();
-    
-                            for (int d = 0; d < N + M - 1; d++) 
-                            {
-                                intermediate.clear();
-                                
-                                int r = d < M ? 0 : d - M + 1;
-                                int c = d < M ? d : M - 1;
-                                
-                                while (r < N && c > -1) 
-                                {
-                                    intermediate.add(wordGrid[r][c]);
-                                    r++;
-                                    c--;
-                                }
-                                intermediate2 = reverseArrayList(intermediate);
-                                String finalString2 = getString(intermediate2);
-    
-                                // Search for pattern 
-                                int[] resultNE = getIndexAndCount(finalString2, tempChange3);
-                                if (resultNE[0] > -1)
-                                {
-                                    isNE = true;
-                                    resultNE[2] = r;
-                                    System.out.println(wordIn + " was found starting at " + resultNE[2] + "," + resultNE[0] + " and oriented Northeast (" + resultNE[1] + ")");
-                                    break;
-                                }
-                                else 
-                                {
-                                    int stringLength = finalString2.length();
-                                    int sumOfComparisons = resultNE[1] * stringLength; 
-                                }
-                            }
-
-                            String majorDiagonal = "";
-                            String minorDiagonal = "";
-                            int m = rowSize;
-                            int n = colSize; 
-                            char currChar = 'x';
-                            String charStr = "";
-    
-                            for(int k = 0; k < m; k++)
-                            {
-                                int i = k; 
-                                int j = 0;
-                                
-                                while (i > 0 && j <= n - 1)
-                                {
-                                    currChar = wordGrid[i][j];
-                                    charStr = Character.toString(currChar);
-                                    majorDiagonal = majorDiagonal.concat(charStr);
-                                    i--;
-                                    j++;
-                                }
-    
-                                // Search for pattern 
-                                int[] resultNW = getIndexAndCount(majorDiagonal, tempChange3);
-                                if (resultNW[0] > -1)
-                                {
-                                    isNW = true;
-                                    resultNW[2] = m;
-                                    System.out.println(wordIn + " was found starting at " + resultNW[2] + "," + resultNW[0] + " and oriented Northwest (" + resultNW[1] + ")");
-                                    break;
-                                }
-                                else 
-                                {
-                                    int stringLength = majorDiagonal.length();
-                                    int sumOfComparisons = resultNW[1] * stringLength; 
-                                }
-                            }
-    
-                            for (int k = 0; k < n -1; k++)
-                            {
-                                int i = m - 1;
-                                int j = k; 
-                                
-                                while(j <= n - 1)
-                                {
-                                    currChar = wordGrid[i][j];
-                                    charStr = Character.toString(currChar);
-                                    minorDiagonal = minorDiagonal.concat(charStr);
-                                    i--;
-                                    j++;
-                                }
-                                // Search for pattern 
-                                int[] resultNW = getIndexAndCount(minorDiagonal, tempChange3);
-                                if (resultNW[0] > -1)
-                                {
-                                    isNW = true;
-                                    resultNW[2] = m;
-                                    System.out.println(wordIn + " was found starting at " + resultNW[2] + "," + resultNW[0] + " and oriented Northwest (" + resultNW[1] + ")");
-                                    break;
-                                }
-                                else 
-                                {
-                                    int stringLength = minorDiagonal.length();
-                                    int sumOfComparisons = resultNW[1] * stringLength; 
-                                }
-                            }
-
-                            // is SE
-                                for(int k = 0; k < m; k++)
-                                {
-                                    int i = k; 
-                                    int j = 0;
-                                    
-                                    while (i > 0 && j <= n - 1)
-                                    {
-                                        currChar = wordGrid[i][j];
-                                        charStr = Character.toString(currChar);
-                                        majorDiagonal = majorDiagonal.concat(charStr);
-                                        i--;
-                                        j++;
-                                    }
-    
-                                    // Search for pattern 
-                                    String revMajorDiagonal = reverseString(majorDiagonal);
-                                    int[] resultSE = getIndexAndCount(revMajorDiagonal, tempChange3);
-                                    if (resultSE[0] > -1)
-                                    {
-                                        isSE = true;
-                                        resultSE[2] = m;
-                                        System.out.println(wordIn + " was found starting at " + resultSE[2] + "," + resultSE[0] + " and oriented Southeast (" + resultSE[1] + ")");
-                                        break;
-                                    }
-                                    else 
-                                    {
-                                        int stringLength = majorDiagonal.length();
-                                        int sumOfComparisons = resultSE[1] * stringLength; 
-                                    }
-                                }
-                                for (int k = 0; k < n -1; k++)
-                                {
-                                    int i = m - 1;
-                                    int j = k; 
-                                    
-                                    while(j <= n - 1)
-                                    {
-                                        currChar = wordGrid[i][j];
-                                        charStr = Character.toString(currChar);
-                                        minorDiagonal = minorDiagonal.concat(charStr);
-                                        i--;
-                                        j++;
-                                    }
-                                    // Search for pattern 
-                                    String revMinorDiagonal = reverseString(minorDiagonal);
-                                    int[] resultSE = getIndexAndCount(minorDiagonal, tempChange3);
-                                    if (resultSE[0] > -1)
-                                    {
-                                        isSE = true;
-                                        resultSE[2] = m;
-                                        System.out.println(wordIn + " was found starting at " + resultSE[2] + "," + resultSE[0] + " and oriented Southeast (" + resultSE[1] + ")");
-                                        break;
-                                    }
-                                    else 
-                                    {
-                                        int stringLength = revMinorDiagonal.length();
-                                        int sumOfComparisons = resultSE[1] * stringLength; 
-                                    }
-                                }
-    
-                            //End of searches. Unfound.
-                            String justZero = "0";
-                            if(!comparisonSumString.equals(justZero))
-                            {
-                                int i = Integer.parseInt(comparisonSumString);
-                                System.out.println(wordIn + " was not found. (" + i + ")");
-                            }
                         } // this ends if statement.
                         else
                         {
@@ -827,7 +285,6 @@ public class WordFind
                     }
             } // ends overall else 
         }
-     
 
 /***********************************************************
  * Prompt user to enter at least one file into command line
@@ -899,7 +356,8 @@ public class WordFind
 	        }
 	        count++; 
 	    }
-	    
+        
+        result[0] = result[0] + 1; 
 	    result[1] = count;
         result[2] = 0; 
         
