@@ -200,13 +200,28 @@ public class sortit
   {
     LQueue list0 = new LQueue(); 
     LQueue list1 = new LQueue(); 
+    MyQueue currQueue = new MyQueue(null);
+    currQueue.setData(list0);
 
     for(int h = 0; h < args.length; h++)
     {
       String currArgument = args[h]; 
       if (currArgument.equals("-"))
       {
-        list0.enqueue(currArgument); 
+        try 
+        {
+          Scanner input = new Scanner(System.in);
+          while (input.hasNextLine())
+          {
+            String lineIn = input.nextLine();
+            list0.enqueue(lineIn);
+          }
+          input.close();
+        } 
+        catch(Exception e)
+        {
+          e.printStackTrace();
+        }
       }
     }
     for(int f = 0; f < args.length; f++)
@@ -228,15 +243,13 @@ public class sortit
           }
             // Close file
             fin.close();
-        } catch (IOException e) 
-          {
-            e.printStackTrace();
-            System.out.println("An error occurred with opening " + currFile + ". \n");
-          }
+        }
+        catch (IOException e) 
+        {
+          e.printStackTrace();
+        }
       } // End if command line argument is not a hypen
     } // End for loop through command line arguments
-
-    System.out.println("List 1: ");
 
     if(!list0.isEmpty())
     {
@@ -247,8 +260,6 @@ public class sortit
         list0.dequeue();
       }
     }
-
-    System.out.println("List 2: ");
 
     if(!list1.isEmpty())
     {
@@ -264,28 +275,17 @@ public class sortit
      * Data has been accumulated into list0
      * Ready for sorting 
      *******************************************************************/
-    
-      MyQueue currQueue = new MyQueue(null);
-      currQueue.setData(list0);
       
       if(currQueue.getData() == list0)
       {
-        System.out.print("True. Data of currQueue is list0 \n");
+        System.out.println("list0");
+      }
+      else
+      {
+        System.out.println("list1"); 
       }
 
       currQueue = SwapList(currQueue, list0, list1);
-
-      if(currQueue.getData() == list1)
-      {
-        System.out.print("Data of currQueue switched to list1 \n");
-      }
-
-      currQueue = SwapList(currQueue, list0, list1);
-
-      if(currQueue.getData() == list0)
-      {
-        System.out.print("Data of currQueue switched to list0 \n");
-      }
       
 
   } // End public static void main
