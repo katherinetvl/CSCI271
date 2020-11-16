@@ -8,7 +8,6 @@ import java.io.File; //For File use
 import java.io.IOException; //For File errors
 import java.util.Scanner; //For Scanner use  
 
-
 /*******************************************************
 * MyLink class (Link class renamed)
 ********************************************************/ 
@@ -205,8 +204,7 @@ public class sortit
 
     for(int h = 0; h < args.length; h++)
     {
-      String currArgument = args[h]; 
-      if (currArgument.equals("-"))
+      if (args[h].equals("-"))
       {
         try 
         {
@@ -251,8 +249,35 @@ public class sortit
       } // End if command line argument is not a hypen
     } // End for loop through command line arguments
 
+    /*******************************************************************
+     * Data has been accumulated into list0
+     * Ready for sorting 
+     *******************************************************************/
+    String headList = list0.frontValue().getData();
+    list0.dequeue(); 
+    list0.enqueue(headList);
+
+    int queueSize = list0.length();
+    for(int n = 1; n < queueSize; n++)
+    {
+      String dequeueElement = list0.dequeue().getData();
+      int compareDequeueToFront = dequeueElement.compareTo(headList);
+      if (compareDequeueToFront >= 0 && currQueue.getData() == list0) 
+      {
+        list0.enqueue(dequeueElement);
+        headList = list0.frontValue().getData();
+      }
+      else
+      {
+        list1.enqueue(dequeueElement);
+        currQueue = SwapList(currQueue, list0, list1);
+        headList = list0.frontValue().getData();
+      }
+    }
+
     if(!list0.isEmpty())
     {
+      System.out.println("This is list0");
       while(!list0.isEmpty())
       {
         String queueLine = list0.frontValue().getData(); 
@@ -263,6 +288,7 @@ public class sortit
 
     if(!list1.isEmpty())
     {
+      System.out.println("This is list1");
       while(!list1.isEmpty())
       {
         String queueLine = list1.frontValue().getData(); 
@@ -271,22 +297,6 @@ public class sortit
       }
     }
     System.out.println();
-    /*******************************************************************
-     * Data has been accumulated into list0
-     * Ready for sorting 
-     *******************************************************************/
-      
-      if(currQueue.getData() == list0)
-      {
-        System.out.println("list0");
-      }
-      else
-      {
-        System.out.println("list1"); 
-      }
-
-      currQueue = SwapList(currQueue, list0, list1);
-      
 
   } // End public static void main
 
