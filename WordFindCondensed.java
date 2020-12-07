@@ -134,6 +134,7 @@ public class WordFindCondensed
 
 /***********************************************************************************
  * Obtain text diagonally, toward northeast
+ * Reverse to obtain text diagonally, toward southwest 
  ***********************************************************************************/
                         // isNE
                         int diagRS = wordGrid.length; 
@@ -142,7 +143,6 @@ public class WordFindCondensed
                         ArrayList<Character> intermediate = new ArrayList<Character>();
 
                         // first half
-                        System.out.println("First half");
                         for (int r = 0; r < diagRS; r++) 
                         {
                             for (int row = r, col = 0; row >= 0 && col < diagCS; row--, col++) 
@@ -151,16 +151,15 @@ public class WordFindCondensed
                             }
 
                             String finalNE = GetString(intermediate);
+                            String finalSW = ReverseString(finalNE);
 
-                            // search for pattern 
+                            // search for: word pattern 
+                            // direction: NE text, upper half 
                             int[] resultNE = getIndexAndCount(finalNE, tempChange2);
                             if (resultNE[0] > 0)
                             {
-
-                                System.out.println(r + " " + intermediate);
-
-                                resultNE[0] = r + 1;
-                                resultNE[2] = diagRS - resultNE[0] + 1;
+                                resultNE[2] = resultNE[0];
+                                resultNE[0] = (r - resultNE[0]) + 2;
                                 System.out.println(strCurr2 + " was found starting at " + resultNE[0] + "," + resultNE[2] + " and oriented Northeast (" + resultNE[1] + ")");
                                 foundNE = true; 
                                 break;
@@ -171,11 +170,28 @@ public class WordFindCondensed
                                 comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
                             }
 
+                            // search for: word pattern
+                            // direction: SW text, upper half 
+                            int[] resultSW = getIndexAndCount(finalSW, tempChange2);
+                            if(resultSW[0] > 0)
+                            {
+                                resultSW[2] = 2 + (r - resultSW[0]);
+                                System.out.println(strCurr2 + " was found starting at " + resultSW[0] + "," + resultSW[2] + " and oriented Southwest (" + resultSW[1] + ")");
+                                foundSW = true;
+                                break;
+                            }
+                            else
+                            {
+                                int sumOfComparisons = resultSW[1] * diagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }
+
                             intermediate.clear();
                         }
-                        intermediate.clear(); 
-                        // second half 
-                        System.out.println("Second half");
+
+                        intermediate.clear();
+                        // clear arraylist for second half of matrix 
+
                         for (int c = 1; c < diagCS; c++) 
                         {
                             for (int row = diagRS-1, col = c; row >= 0 && col < diagCS; row--, col++) 
@@ -184,15 +200,16 @@ public class WordFindCondensed
                             }
                             
                             String finalNE2 = GetString(intermediate);
+                            String finalSW2 = ReverseString(finalNE2);
 
-                            // search for pattern 
+                            // search for : word pattern 
+                            // direction: NE text, lower half of matrix
                             int[] resultNE2 = getIndexAndCount(finalNE2, tempChange2);
+
                             if (resultNE2[0] > 0)
                             {
-                                System.out.println(c + " " + intermediate);
-
                                 resultNE2[2] = c + resultNE2[0];
-                                // resultNE2[0] = (diagCS - c) + resultNE2[0];
+                                resultNE2[0] = (diagCS - resultNE2[0]) + 1;
                                 System.out.println(strCurr2 + " was found starting at " + resultNE2[0] + "," + resultNE2[2] + " and oriented Northeast (" + resultNE2[1] + ")");
                                 foundNE = true; 
                                 break;
@@ -203,13 +220,25 @@ public class WordFindCondensed
                                 comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
                             }
 
+                            // search for : word pattern 
+                            // direction: SW text, lower half of matrix
+                            int[] resultSW2 = getIndexAndCount(finalSW2, tempChange2);
+                            if(resultSW2[0] > 0)
+                            {
+                                resultSW2[2] = (diagCS + 1) - resultSW2[0]; // keep 
+                                resultSW2[0] = diagCS - (diagCS - (resultSW2[0] + c));
+                                System.out.println(strCurr2 + " was found starting at " + resultSW2[0] + "," + resultSW2[2] + " and oriented Southwest (" + resultSW2[1] + ")");
+                                foundSW = true;
+                                break;
+                            }
+                            else
+                            {
+                                int sumOfComparisons = resultSW2[1] * diagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }
+
                             intermediate.clear();
                         }
-/***********************************************************************************
- * Obtain text diagonally, toward southwest
- ***********************************************************************************/
-                        // isSW
-
 /***********************************************************************************
  * Obtain text diagonally, toward southeast
  ***********************************************************************************/
