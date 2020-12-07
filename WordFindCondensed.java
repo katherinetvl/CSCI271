@@ -272,8 +272,7 @@ public class WordFindCondensed
                             int[] resultSE = getIndexAndCount(finalSE, tempChange2);
                             if (resultSE[0] > 0)
                             {
-                                resultSE[2] = resultSE[0];
-                                // resultSE[0] = (j - resultSE[0]) + 2;
+                                resultSE[2] = (j + resultSE[0]);
                                 System.out.println(strCurr2 + " was found starting at " + resultSE[0] + "," + resultSE[2] + " and oriented Sortheast (" + resultSE[1] + ")");
                                 System.out.println(j + " " + resultSE[0] + " " + resultSE[1] + " " + xDiagRS);
                                 foundNE = true; 
@@ -293,7 +292,6 @@ public class WordFindCondensed
                                 resultNW[2] = (xDiagRS + 1) - resultNW[0];
                                 resultNW[0] = resultNW[2] - j;
                                 System.out.println(strCurr2 + " was found starting at " + resultNW[0] + "," + resultNW[2] + " and oriented Northwest (" + resultNW[1] + ")");
-                                System.out.println(j + " " + resultSE[0] + " " + resultSE[1] + " " + xDiagRS);
                                 foundSW = true;
                                 break;
                             }
