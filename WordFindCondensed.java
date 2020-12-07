@@ -274,7 +274,6 @@ public class WordFindCondensed
                             {
                                 resultSE[2] = (j + resultSE[0]);
                                 System.out.println(strCurr2 + " was found starting at " + resultSE[0] + "," + resultSE[2] + " and oriented Sortheast (" + resultSE[1] + ")");
-                                System.out.println(j + " " + resultSE[0] + " " + resultSE[1] + " " + xDiagRS);
                                 foundNE = true; 
                                 break;
                             }
@@ -306,7 +305,7 @@ public class WordFindCondensed
                 
                         intermediate2.clear();
                         // second half of matrix
-/*
+
                         for(int i = 1; i < xDiagRS; i++)
                         {
                             for(int j = i, k = 0; j< xDiagRS && k < xDiagCS; j++, k++)
@@ -323,7 +322,7 @@ public class WordFindCondensed
                             if (resultSE2[0] > 0)
                             {
                                 resultSE2[2] = resultSE2[0];
-                                resultSE2[0] = (i - resultSE2[0]) + 2;
+                                resultSE2[0] = i + resultSE2[0];
                                 System.out.println(strCurr2 + " was found starting at " + resultSE2[0] + "," + resultSE2[2] + " and oriented Sortheast (" + resultSE2[1] + ")");
                                 foundNE = true; 
                                 break;
@@ -335,13 +334,14 @@ public class WordFindCondensed
                             }
 
                             // search for: word pattern
-                            // direction: NW text, upper half 
+                            // direction: NW text, lower half 
                             int[] resultNW2 = getIndexAndCount(finalNW2, tempChange2);
                             if(resultNW2[0] > 0)
                             {
-                                resultNW2[2] = 2 + (i - resultNW2[0]);
+                                resultNW2[0] = (xDiagRS + 1) - resultNW2[0];
+                                resultNW2[2] = resultNW2[0] - i;
                                 System.out.println(strCurr2 + " was found starting at " + resultNW2[0] + "," + resultNW2[2] + " and oriented Northwest (" + resultNW2[1] + ")");
-                                foundSW = true;
+                                foundNW = true;
                                 break;
                             }
                             else
@@ -352,7 +352,6 @@ public class WordFindCondensed
 
                             intermediate2.clear();
                         }
-                        */
 /***********************************************************************************
  * Final determinants
  ***********************************************************************************/
