@@ -10,6 +10,7 @@ public class PuzzlePegs
 {
     public static void main(String[] args) 
     {
+
         public int[][] validMoves = 
         {{ 0, 1, 3 }, { 0, 2, 5 },
         { 1, 3, 6 }, { 1, 4, 8 }, 
@@ -25,7 +26,7 @@ public class PuzzlePegs
         { 11, 7, 4 }, { 11, 12, 13 },
         { 12, 7, 3 }, { 12, 8, 5 }, { 12, 11, 10 }, { 12, 13, 14 },
         { 13, 8, 4 }, {13, 12, 11 },
-        { 14, 9, 5 }, { 14, 13, 12 } 
+        { 14, 9, 5 }, { 14, 13,12 } 
         };
 
         public ArrayList<Integer> puzzleSolution = new ArrayList<Integer>();
@@ -71,6 +72,9 @@ public class PuzzlePegs
             // no user defined command line arguments
             PuzzleBoard boardType0 = new PuzzleBoard();
             boardType0.printBoard();
+
+
+            
         }
 
 
@@ -129,7 +133,7 @@ public class PuzzlePegs
         return boardArray;
     }
 
-    public static boolean hasValidMove(char[] arrBoard, int[][] moveMatrix, int currBoardPeg)
+    public boolean isValidMove(char[] arrBoard, int[][] moveMatrix, int currBoardPeg)
     {
         boolean hasValidMove = false;
         int rowSize = 36; 
@@ -148,7 +152,6 @@ public class PuzzlePegs
                     if (arrBoard[first] == 'O' && arrBoard[second] == '-' && arrBoard[third] == '-')
                     {
                         hasValidMove = true;
-                        arrBoard = PegJump(arrBoard, first, second, third);
                         break;
                     }
                 }
@@ -161,7 +164,7 @@ public class PuzzlePegs
     * Input: PuzzleBoard board, int[][] moveMatrix, ArrayList pegsMoved
     * Output: No solution or ArrayList with solution
  ***************************************************************/
-    public static ArrayList RecursiveJumpSolution(PuzzleBoard arrBoard, int[][] moveMatrix, ArrayList pegsMoved)
+  /*  public static ArrayList RecursiveJumpSolution(PuzzleBoard arrBoard, int[][] moveMatrix, ArrayList pegsMoved)
     {
         for(int i = 0; i < arrBoard.boardLength(); i++)
         {
@@ -174,5 +177,5 @@ public class PuzzlePegs
         
         return pegsMoved;
     }
-
+*/
 } // End public class pegs
