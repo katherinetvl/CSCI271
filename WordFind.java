@@ -1,3 +1,9 @@
+/***********************************************
+* Katherine Le
+* lek4@winthrop.edu
+* CSCI 271 PA2
+* Description: Search for words in a char grid
+************************************************/
 import java.io.File; // For File use 
 import java.io.IOException; // For File errors
 import java.util.Scanner; // For Scanner use   
@@ -91,6 +97,15 @@ public class WordFind
                 String strCurr2 = null;
                 String tempChange2 = null; 
 
+                boolean foundEast = false;
+                boolean foundWest = false;
+                boolean foundSouth = false;
+                boolean foundNorth = false;
+                boolean foundNE = false;
+                boolean foundSW = false;
+                boolean foundSE = false;
+                boolean foundNW = false;
+
                 try 
                 {
                     Scanner fin2 = new Scanner(searchForFile);
@@ -99,30 +114,31 @@ public class WordFind
                         strCurr2 = fin2.nextLine();
                         // System.out.println(strCurr2);
                         tempChange2 = strCurr2.replaceAll("[^A-Za-z]+", "");
-
-                        System.out.println("Word to search: " + tempChange2);
+                        // System.out.println("Word to search: " + tempChange2);
 /***********************************************************************************
  * Obtain text horizontally, toward right 
  ***********************************************************************************/
                         // isEast
-                        for (int r = 0; r < rowSize; r++)
+                        for (int right = 0; right < rowSize; right++)
                         {
-                            char[] eastChar= wordGrid[r];
+                            char[] eastChar= wordGrid[right];
                             String eastText = null;
                             eastText = (String.valueOf(eastChar));
 
-                            // System.out.print("East text: " + eastText + "\n");
                             // Search for pattern
-                            do {
-                                int[] resultEast = getIndexAndCount(eastText, tempChange2);
-                                if(resultEast[0] > 0)
-                                { 
-                                    resultEast[2] = r; 
-                                    System.out.println(strCurr2 + " was found starting at " + resultEast[2] + "," + resultEast[0] + " and oriented East (" + resultEast[1] + ")");
-                                    break;
-                                }
-                                r++;
-                            } while (r < rowSize);
+                            int[] resultEast = getIndexAndCount(eastText, tempChange2);
+                            if (resultEast[0] > 0)
+                            {
+                                resultEast[2] = right + 1;
+                                System.out.println(strCurr2 + " was found starting at " + resultEast[2] + "," + resultEast[0] + " and oriented East (" + resultEast[1] + ")");
+                                foundEast = true; 
+                                break;
+                            }
+                            else 
+                            {
+                                int sumOfComparisons = resultEast[1] * right-1; 
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons);
+                            }
                         }
 /***********************************************************************************
  * Obtain text horizontally, toward left 
@@ -133,22 +149,25 @@ public class WordFind
                             char[] eastChar = wordGrid[left]; 
                             String eastText = null;
                             eastText = (String.valueOf(eastChar));
-                            String westText = reverseString(eastText);
+                            String westText = ReverseString(eastText);
 
                             // System.out.print("West text: " + westText + "\n");
 
                             // Search for pattern 
-                            do {
-                                int[] resultWest = getIndexAndCount(westText, tempChange2);
-                                if(resultWest[0] > 0)
-                                { 
-                                    resultWest[2] = left - resultWest[0]; 
-                                    System.out.println(strCurr2 + " was found starting at " + resultWest[2] + "," + resultWest[0] + " and oriented West (" + resultWest[1] + ")");
-                                    break;
-                                }
-                                left++;
-                            } while (left < rowSize);
-
+                            int[] resultWest = getIndexAndCount(westText, tempChange2);
+                            if(resultWest[0] > 0)
+                            { 
+                                resultWest[0] = (colSize - resultWest[0]) + 1;
+                                resultWest[2] = left + 1;
+                                System.out.println(strCurr2 + " was found starting at " + resultWest[2] + "," + resultWest[0] + " and oriented West (" + resultWest[1] + ")");
+                                foundWest = true; 
+                                break;
+                            }
+                            else 
+                            {
+                                int sumOfComparisons = resultWest[1] * left-1; 
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons);
+                            }
                         }
 /***********************************************************************************
  * Transpose 2D char array for access to column elements as rows   
@@ -174,20 +193,19 @@ public class WordFind
                             String southText = null;
                             southText = (String.valueOf(southChar));
 
-                            // System.out.print("South text " + southText + "\n");
-
                             // Search for pattern 
                             int[] resultSouth = getIndexAndCount(southText, tempChange2);
                             if (resultSouth[0] > 0)
                             {
                                 resultSouth[2] = down + 1;
                                 System.out.println(strCurr2 + " was found starting at " + resultSouth[0] + "," + resultSouth[2] + " and oriented South (" + resultSouth[1] + ")");
+                                foundSouth = true; 
                                 break;
                             }
                             else 
                             {
                                 int sumOfComparisons = resultSouth[1] * newRS -1; 
-                                updateComparisonSumString(comparisonSumString, sumOfComparisons);
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons);
                             }
                         }
 /***********************************************************************************
@@ -199,48 +217,246 @@ public class WordFind
                             char[] southChar = transposedWG[up]; 
                             String southText = null;
                             southText = (String.valueOf(southChar));
-                            String northText = reverseString(southText);
-
-                            System.out.println("North text: " + northText); 
+                            String northText = ReverseString(southText);
 
                             // Search for pattern 
                             int[] resultNorth = getIndexAndCount(northText, tempChange2);
                             if (resultNorth[0] > 0)
                             {
-                                resultNorth[2] = up + resultNorth[0];
-                                System.out.println(strCurr2 + " was found starting at " + up + "," + resultNorth[2] + " and oriented North (" + resultNorth[1] + ")");
+                                resultNorth[0] = (newRS - resultNorth[0]) + 1;
+                                resultNorth[2] = up + 1;
+                                System.out.println(strCurr2 + " was found starting at " + resultNorth[0] + "," + resultNorth[2] + " and oriented North (" + resultNorth[1] + ")");
+                                foundNorth = true; 
                                 break;
                             }
                             else 
                             {
                                 int sumOfComparisons = resultNorth[1] * newRS -1;
-                                updateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
                             }
                         }
 /***********************************************************************************
- * Obtain text diagonally, toward southwest
- ***********************************************************************************/
-                        // isSW
-
-/***********************************************************************************
  * Obtain text diagonally, toward northeast
+ * Reverse to obtain text diagonally, toward southwest 
  ***********************************************************************************/
-                        // isNE
+                        int diagRS = wordGrid.length; 
+                        int diagCS = wordGrid[0].length; 
+                        
+                        ArrayList<Character> intermediate = new ArrayList<Character>();
 
-/***********************************************************************************
- * Obtain text diagonally, toward northwest
- ***********************************************************************************/
-                        // is NW
+                        // first half of matrix
+                        for (int r = 0; r < diagRS; r++) 
+                        {
+                            for (int row = r, col = 0; row >= 0 && col < diagCS; row--, col++) 
+                            {
+                                intermediate.add(wordGrid[row][col]);
+                            }
+
+                            String finalNE = GetString(intermediate);
+                            String finalSW = ReverseString(finalNE);
+
+                            // isNE
+                            int[] resultNE = getIndexAndCount(finalNE, tempChange2);
+                            if (resultNE[0] > 0)
+                            {
+                                resultNE[2] = resultNE[0];
+                                resultNE[0] = (r - resultNE[0]) + 2;
+                                System.out.println(strCurr2 + " was found starting at " + resultNE[0] + "," + resultNE[2] + " and oriented Northeast (" + resultNE[1] + ")");
+                                foundNE = true; 
+                                break;
+                            }
+                            else 
+                            {
+                                int sumOfComparisons = resultNE[1] * diagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }
+
+                            // isSW
+                            int[] resultSW = getIndexAndCount(finalSW, tempChange2);
+                            if(resultSW[0] > 0)
+                            {
+                                resultSW[2] = 2 + (r - resultSW[0]);
+                                System.out.println(strCurr2 + " was found starting at " + resultSW[0] + "," + resultSW[2] + " and oriented Southwest (" + resultSW[1] + ")");
+                                foundSW = true;
+                                break;
+                            }
+                            else
+                            {
+                                int sumOfComparisons = resultSW[1] * diagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }
+
+                            intermediate.clear();
+                        }
+
+                        intermediate.clear();
+                        // clear arraylist
+                        
+                        //second half of matrix 
+                        for (int c = 1; c < diagCS; c++) 
+                        {
+                            for (int row = diagRS-1, col = c; row >= 0 && col < diagCS; row--, col++) 
+                            {
+                                intermediate.add(wordGrid[row][col]);
+                            }
+                            
+                            String finalNE2 = GetString(intermediate);
+                            String finalSW2 = ReverseString(finalNE2);
+
+                            // isNE
+                            int[] resultNE2 = getIndexAndCount(finalNE2, tempChange2);
+
+                            if (resultNE2[0] > 0)
+                            {
+                                resultNE2[2] = c + resultNE2[0];
+                                resultNE2[0] = (diagCS - resultNE2[0]) + 1;
+                                System.out.println(strCurr2 + " was found starting at " + resultNE2[0] + "," + resultNE2[2] + " and oriented Northeast (" + resultNE2[1] + ")");
+                                foundNE = true; 
+                                break;
+                            }
+                            else 
+                            {
+                                int sumOfComparisons = resultNE2[1] * diagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }
+
+                            // isSW
+                            int[] resultSW2 = getIndexAndCount(finalSW2, tempChange2);
+                            if(resultSW2[0] > 0)
+                            {
+                                resultSW2[2] = (diagCS + 1) - resultSW2[0]; // keep 
+                                resultSW2[0] = diagCS - (diagCS - (resultSW2[0] + c));
+                                System.out.println(strCurr2 + " was found starting at " + resultSW2[0] + "," + resultSW2[2] + " and oriented Southwest (" + resultSW2[1] + ")");
+                                foundSW = true;
+                                break;
+                            }
+                            else
+                            {
+                                int sumOfComparisons = resultSW2[1] * diagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }
+
+                            intermediate.clear();
+                        }
 /***********************************************************************************
  * Obtain text diagonally, toward southeast
+ * Reverse to obtain text diagonally, toward northwest 
  ***********************************************************************************/
-                        // is SE
+                        int xDiagRS = rowSize;
+                        int xDiagCS = colSize;
+
+                        ArrayList<Character> intermediate2 = new ArrayList<Character>();
+
+                        // first half of matrix 
+                        for(int j = xDiagCS-1; j >= 0; j--)
+                        {
+                            for(int k = 0; k < xDiagRS; k++)
+                            {
+                                if((j + k) < xDiagCS)
+                                {
+                                    intermediate2.add(wordGrid[k][j + k]);
+                                } 
+                                else 
+                                {
+                                    break;
+                                }
+                            }
+
+                            String finalSE = GetString(intermediate2);
+                            String finalNW = ReverseString(finalSE);
+
+                            //isSE
+                            int[] resultSE = getIndexAndCount(finalSE, tempChange2);
+                            if (resultSE[0] > 0)
+                            {
+                                resultSE[2] = (j + resultSE[0]);
+                                System.out.println(strCurr2 + " was found starting at " + resultSE[0] + "," + resultSE[2] + " and oriented Sortheast (" + resultSE[1] + ")");
+                                foundSE = true;
+                                break;
+                            }
+                            else 
+                            {
+                                int sumOfComparisons = resultSE[1] * xDiagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }
+
+                            // isNW
+                            int[] resultNW = getIndexAndCount(finalNW, tempChange2);
+                            if(resultNW[0] > 0)
+                            {
+                                resultNW[2] = (xDiagRS + 1) - resultNW[0];
+                                resultNW[0] = resultNW[2] - j;
+                                System.out.println(strCurr2 + " was found starting at " + resultNW[0] + "," + resultNW[2] + " and oriented Northwest (" + resultNW[1] + ")");
+                                foundNW = true;
+                                break;
+                            }
+                            else
+                            {
+                                int sumOfComparisons = resultNW[1] * xDiagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }                            
+
+                            intermediate2.clear();
+                        }
+                
+                        intermediate2.clear();
+                        // clear arraylist
+
+                        // second half of matrix
+                        for(int i = 1; i < xDiagRS; i++)
+                        {
+                            for(int j = i, k = 0; j < xDiagRS && k < xDiagCS; j++, k++)
+                            {
+                                intermediate2.add(wordGrid[j][k]);
+                            }
                             
+                            String finalSE2 = GetString(intermediate2);
+                            String finalNW2 = ReverseString(finalSE2);
+
+                            // isSE text
+                            int[] resultSE2 = getIndexAndCount(finalSE2, tempChange2);
+                            if (resultSE2[0] > 0)
+                            {
+                                resultSE2[2] = resultSE2[0];
+                                resultSE2[0] = i + resultSE2[0];
+                                System.out.println(strCurr2 + " was found starting at " + resultSE2[0] + "," + resultSE2[2] + " and oriented Sortheast (" + resultSE2[1] + ")");
+                                foundSE = true; 
+                                break;
+                            }
+                            else 
+                            {
+                                int sumOfComparisons = resultSE2[1] * xDiagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }
+
+                            // search for: word pattern
+                            // direction: NW text, lower half 
+                            int[] resultNW2 = getIndexAndCount(finalNW2, tempChange2);
+                            if(resultNW2[0] > 0)
+                            {
+                                resultNW2[0] = (xDiagRS + 1) - resultNW2[0];
+                                resultNW2[2] = resultNW2[0] - i;
+                                System.out.println(strCurr2 + " was found starting at " + resultNW2[0] + "," + resultNW2[2] + " and oriented Northwest (" + resultNW2[1] + ")");
+                                foundNW = true;
+                                break;
+                            }
+                            else
+                            {
+                                int sumOfComparisons = resultNW2[1] * xDiagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            } 
+
+                            intermediate2.clear();
+                        }
 /***********************************************************************************
  * Final determinants
  ***********************************************************************************/
                         //End of searches. Unfound.
-
+                        if(!foundEast && !foundWest && !foundSouth && !foundNorth && !foundNE && !foundSW && !foundSE && !foundNW)
+                        {
+                            int totalNF = Integer.parseInt(comparisonSumString);
+                            System.out.println(strCurr2 + " was not found. (" + totalNF + ")");
+                        }
                     } // This ends [while (fin2.hasNextLine())]
 
                     fin2.close();
@@ -256,33 +472,364 @@ public class WordFind
             else 
             {
                 System.out.println("Enter word to search: ");
-                System.out.println("Enter 'quit' to exit program.");
+                boolean isEast = false;
+                boolean isWest = false;
+                boolean isSouth = false;
+                boolean isNorth = false; 
+                boolean isNE = false;
+                boolean isSW = false;
+                boolean isSE = false;
+                boolean isNW = false;
+
                 try 
                 {
                     Scanner input = new Scanner(System.in);
-                    while (input.hasNextLine())
-                    {
                         String wordIn = input.next();
                         String wordCaps = wordIn.toUpperCase(); 
-                        if(!(wordCaps.equals("QUIT")))
-                        {
-                            System.out.println("Word To Search is: " + wordCaps + "\n");
-                            // String tempChange3 = wordCaps.replaceAll("[^A-Za-z]+", "");
+                    input.close();
 
-                            // isEast
-
-                        } // this ends if statement.
-                        else
+/***********************************************************************************
+ * Obtain text horizontally, toward right 
+ ***********************************************************************************/
+                        // isEast
+                        for (int right = 0; right < rowSize; right++)
                         {
-                            System.exit(0);
+                            char[] eastChar= wordGrid[right];
+                            String eastText = null;
+                            eastText = (String.valueOf(eastChar));
+
+                            // Search for pattern
+                            int[] resultEast = getIndexAndCount(eastText, wordCaps);
+                            if (resultEast[0] > 0)
+                            {
+                                resultEast[2] = right + 1;
+                                System.out.println(wordIn + " was found starting at " + resultEast[2] + "," + resultEast[0] + " and oriented East (" + resultEast[1] + ")");
+                                isEast = true; 
+                                break;
+                            }
+                            else 
+                            {
+                                int sumOfComparisons = resultEast[1] * right-1; 
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons);
+                            }
                         }
-                    
-                    } // This ends [while (fin2.hasNextLine())]
-                input.close();
+/***********************************************************************************
+ * Obtain text horizontally, toward left 
+ ***********************************************************************************/
+                        // isWest
+                        for (int left = 0; left < rowSize; left++)
+                        {
+                            char[] eastChar = wordGrid[left]; 
+                            String eastText = null;
+                            eastText = (String.valueOf(eastChar));
+                            String westText = ReverseString(eastText);
+
+                            // Search for pattern 
+                            int[] resultWest = getIndexAndCount(westText, wordCaps);
+                            if(resultWest[0] > 0)
+                            { 
+                                resultWest[0] = (colSize - resultWest[0]) + 1;
+                                resultWest[2] = left + 1;
+                                System.out.println(wordIn + " was found starting at " + resultWest[2] + "," + resultWest[0] + " and oriented West (" + resultWest[1] + ")");
+                                isWest = true; 
+                                break;
+                            }
+                            else 
+                            {
+                                int sumOfComparisons = resultWest[1] * left-1; 
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons);
+                            }
+                        }
+/***********************************************************************************
+ * Transpose 2D char array for access to column elements as rows   
+ ***********************************************************************************/
+                        int newRS = colSize;
+                        int newCS = rowSize;
+                        char[][] transposedWG = new char[newRS][newCS];
+
+                        for(int i= 0; i < colSize; i++)
+                        {
+                            for(int j = 0; j < rowSize; j++)
+                            {
+                                transposedWG[i][j] = wordGrid[j][i];
+                            }
+                        }
+/***********************************************************************************
+ * Obtain vertical text horizontally, toward south  
+ ***********************************************************************************/
+                        // isSouth
+                        for (int down = 0; down < newRS; down++)
+                        {
+                            char[] southChar = transposedWG[down]; 
+                            String southText = null;
+                            southText = (String.valueOf(southChar));
+
+                            // Search for pattern 
+                            int[] resultSouth = getIndexAndCount(southText, wordCaps);
+                            if (resultSouth[0] > 0)
+                            {
+                                resultSouth[2] = down + 1;
+                                System.out.println(wordIn + " was found starting at " + resultSouth[0] + "," + resultSouth[2] + " and oriented South (" + resultSouth[1] + ")");
+                                isSouth = true; 
+                                break;
+                            }
+                            else 
+                            {
+                                int sumOfComparisons = resultSouth[1] * newRS -1; 
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons);
+                            }
+                        }
+/***********************************************************************************
+ * Obtain vertical text horizontally, toward north 
+ ***********************************************************************************/
+                        // isNorth
+                        for (int up = 0; up < newRS; up++)
+                        {
+                            char[] southChar = transposedWG[up]; 
+                            String southText = null;
+                            southText = (String.valueOf(southChar));
+                            String northText = ReverseString(southText);
+
+                            // Search for pattern 
+                            int[] resultNorth = getIndexAndCount(northText, wordCaps);
+                            if (resultNorth[0] > 0)
+                            {
+                                resultNorth[0] = (newRS - resultNorth[0]) + 1;
+                                resultNorth[2] = up + 1;
+                                System.out.println(wordIn + " was found starting at " + resultNorth[0] + "," + resultNorth[2] + " and oriented North (" + resultNorth[1] + ")");
+                                isNorth = true; 
+                                break;
+                            }
+                            else 
+                            {
+                                int sumOfComparisons = resultNorth[1] * newRS -1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }
+                        }
+/***********************************************************************************
+ * Obtain text diagonally, toward northeast
+ * Reverse to obtain text diagonally, toward southwest 
+ ***********************************************************************************/
+                        int diagRS = wordGrid.length; 
+                        int diagCS = wordGrid[0].length; 
+
+                        ArrayList<Character> intermediate = new ArrayList<Character>();
+
+                        // first half of matrix
+                        for (int r = 0; r < diagRS; r++) 
+                        {
+                            for (int row = r, col = 0; row >= 0 && col < diagCS; row--, col++) 
+                            {
+                                intermediate.add(wordGrid[row][col]);
+                            }
+
+                            String finalNE = GetString(intermediate);
+                            String finalSW = ReverseString(finalNE);
+
+                            // isNE
+                            int[] resultNE = getIndexAndCount(finalNE, wordCaps);
+                            if (resultNE[0] > 0)
+                            {
+                                resultNE[2] = resultNE[0];
+                                resultNE[0] = (r - resultNE[0]) + 2;
+                                System.out.println(wordIn + " was found starting at " + resultNE[0] + "," + resultNE[2] + " and oriented Northeast (" + resultNE[1] + ")");
+                                isNE = true; 
+                                break;
+                            }
+                            else 
+                            {
+                                int sumOfComparisons = resultNE[1] * diagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }
+
+                            // isSW
+                            int[] resultSW = getIndexAndCount(finalSW, wordCaps);
+                            if(resultSW[0] > 0)
+                            {
+                                resultSW[2] = 2 + (r - resultSW[0]);
+                                System.out.println(wordIn + " was found starting at " + resultSW[0] + "," + resultSW[2] + " and oriented Southwest (" + resultSW[1] + ")");
+                                isSW = true;
+                                break;
+                            }
+                            else
+                            {
+                                int sumOfComparisons = resultSW[1] * diagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }
+
+                            intermediate.clear();
+                        }
+
+                        intermediate.clear();
+                        // clear arraylist
+
+                        //second half of matrix 
+                        for (int c = 1; c < diagCS; c++) 
+                        {
+                            for (int row = diagRS-1, col = c; row >= 0 && col < diagCS; row--, col++) 
+                            {
+                                intermediate.add(wordGrid[row][col]);
+                            }
+                            
+                            String finalNE2 = GetString(intermediate);
+                            String finalSW2 = ReverseString(finalNE2);
+
+                            // isNE
+                            int[] resultNE2 = getIndexAndCount(finalNE2, wordCaps);
+
+                            if (resultNE2[0] > 0)
+                            {
+                                resultNE2[2] = c + resultNE2[0];
+                                resultNE2[0] = (diagCS - resultNE2[0]) + 1;
+                                System.out.println(wordIn + " was found starting at " + resultNE2[0] + "," + resultNE2[2] + " and oriented Northeast (" + resultNE2[1] + ")");
+                                isNE = true; 
+                                break;
+                            }
+                            else 
+                            {
+                                int sumOfComparisons = resultNE2[1] * diagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }
+
+                            // isSW
+                            int[] resultSW2 = getIndexAndCount(finalSW2, wordCaps);
+                            if(resultSW2[0] > 0)
+                            {
+                                resultSW2[2] = (diagCS + 1) - resultSW2[0]; // keep 
+                                resultSW2[0] = diagCS - (diagCS - (resultSW2[0] + c));
+                                System.out.println(wordIn + " was found starting at " + resultSW2[0] + "," + resultSW2[2] + " and oriented Southwest (" + resultSW2[1] + ")");
+                                isSW = true;
+                                break;
+                            }
+                            else
+                            {
+                                int sumOfComparisons = resultSW2[1] * diagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }
+
+                            intermediate.clear();
+                        }
+/***********************************************************************************
+* Obtain text diagonally, toward southeast
+* Reverse to obtain text diagonally, toward northwest 
+***********************************************************************************/
+                        int xDiagRS = rowSize;
+                        int xDiagCS = colSize;
+
+                        ArrayList<Character> intermediate2 = new ArrayList<Character>();
+
+                        // first half of matrix 
+                        for(int j = xDiagCS-1; j >= 0; j--)
+                        {
+                            for(int k = 0; k < xDiagRS; k++)
+                            {
+                                if((j + k) < xDiagCS)
+                                {
+                                    intermediate2.add(wordGrid[k][j + k]);
+                                } 
+                                else 
+                                {
+                                    break;
+                                }
+                            }
+
+                            String finalSE = GetString(intermediate2);
+                            String finalNW = ReverseString(finalSE);
+
+                            //isSE
+                            int[] resultSE = getIndexAndCount(finalSE, wordCaps);
+                            if (resultSE[0] > 0)
+                            {
+                                resultSE[2] = (j + resultSE[0]);
+                                System.out.println(wordIn + " was found starting at " + resultSE[0] + "," + resultSE[2] + " and oriented Sortheast (" + resultSE[1] + ")");
+                                isSE = true;
+                                break;
+                            }
+                            else 
+                            {
+                                int sumOfComparisons = resultSE[1] * xDiagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }
+
+                            // isNW
+                            int[] resultNW = getIndexAndCount(finalNW, wordCaps);
+                            if(resultNW[0] > 0)
+                            {
+                                resultNW[2] = (xDiagRS + 1) - resultNW[0];
+                                resultNW[0] = resultNW[2] - j;
+                                System.out.println(wordIn + " was found starting at " + resultNW[0] + "," + resultNW[2] + " and oriented Northwest (" + resultNW[1] + ")");
+                                isNW = true;
+                                break;
+                            }
+                            else
+                            {
+                                int sumOfComparisons = resultNW[1] * xDiagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }                            
+
+                            intermediate2.clear();
+                        }
+
+                        intermediate2.clear();
+                        // clear arraylist
+
+                        // second half of matrix
+                        for(int i = 1; i < xDiagRS; i++)
+                        {
+                            for(int j = i, k = 0; j < xDiagRS && k < xDiagCS; j++, k++)
+                            {
+                                intermediate2.add(wordGrid[j][k]);
+                            }
+                            
+                            String finalSE2 = GetString(intermediate2);
+                            String finalNW2 = ReverseString(finalSE2);
+
+                            // isSE text
+                            int[] resultSE2 = getIndexAndCount(finalSE2, wordCaps);
+                            if (resultSE2[0] > 0)
+                            {
+                                resultSE2[2] = resultSE2[0];
+                                resultSE2[0] = i + resultSE2[0];
+                                System.out.println(wordIn + " was found starting at " + resultSE2[0] + "," + resultSE2[2] + " and oriented Sortheast (" + resultSE2[1] + ")");
+                                isSE = true; 
+                                break;
+                            }
+                            else 
+                            {
+                                int sumOfComparisons = resultSE2[1] * xDiagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            }
+
+                            // search for: word pattern
+                            // direction: NW text, lower half 
+                            int[] resultNW2 = getIndexAndCount(finalNW2, wordCaps);
+                            if(resultNW2[0] > 0)
+                            {
+                                resultNW2[0] = (xDiagRS + 1) - resultNW2[0];
+                                resultNW2[2] = resultNW2[0] - i;
+                                System.out.println(wordIn + " was found starting at " + resultNW2[0] + "," + resultNW2[2] + " and oriented Northwest (" + resultNW2[1] + ")");
+                                isNW = true;
+                                break;
+                            }
+                            else
+                            {
+                                int sumOfComparisons = resultNW2[1] * xDiagRS - 1;
+                                comparisonSumString = UpdateComparisonSumString(comparisonSumString, sumOfComparisons); 
+                            } 
+
+                            intermediate2.clear();
+                        }
+                        if(!isEast && !isWest && !isSouth && !isNorth && !isNE && !isSW && !isSE && !isNW)
+                        {
+                            int totalNF = Integer.parseInt(comparisonSumString);
+                            System.out.println(wordIn + " was not found (" + totalNF + ")");
+                        }
+
                 } catch(Exception e)
                     {
                         e.printStackTrace();
                     }
+           
             } // ends overall else 
         }
 
@@ -311,20 +858,19 @@ public class WordFind
     }
 
     /***********************************************************
-    * Function Name: reverseString
+    * Function Name: ReverseString
     * Description: A recursive function that reverses characters in string
     * Input: String
     * Output: String with reversed characters 
     ***********************************************************/
-    public static String reverseString(String x)
+    public static String ReverseString(String x)
     {
         if (x.isEmpty())
         {
             return x;
         }
-        return reverseString(x.substring(1)) + x.charAt(0);
+        return ReverseString(x.substring(1)) + x.charAt(0);
     }
-
     /***********************************************************
     * Function Name: getIndexAndCount 
     * Description: Returns index from Brute Force String Matching Algorithm,
@@ -341,7 +887,7 @@ public class WordFind
 	    int count = 0; 
 	    
 	    result[0] = -1; 
-	    for (int i = 0; i < k; i++)
+	    for (int i = 0; i <= k; i++)
 	    {
 	        int j = 0;
 	        while((j < m && (T.charAt(i+j) == P.charAt(j))))
@@ -363,36 +909,17 @@ public class WordFind
         
 	    return result;
     }
-
     /***********************************************************
-    * Function Name: reverseArrayList 
-    * Description: Reverse elements in an Arraylist 
-    * Input: Character Arraylist
-    * Output: Character Arraylist
-    ***********************************************************/
-    public static ArrayList<Character> reverseArrayList(ArrayList<Character> origList) 
-    { 
-        //Create arraylist to hold reversed arraylist
-        ArrayList<Character> revArrayList = new ArrayList<Character>(); 
-        for (int i = origList.size() - 1; i >= 0; i--) 
-        { 
-            // Append elements in reverse order 
-            revArrayList.add(origList.get(i)); 
-        } 
-        return revArrayList; 
-    } 
-
-    /***********************************************************
-    * Function Name: getString 
+    * Function Name: GetString 
     * Description: Iterates over a character Arraylist and builds string
     * Input: Character Arraylist
     * Output: String
     ***********************************************************/
-    public static String getString(ArrayList<Character> list)
+    public static String GetString(ArrayList<Character> arrayList)
     {    
-        StringBuilder builder = new StringBuilder(list.size());
+        StringBuilder builder = new StringBuilder(arrayList.size());
         
-        for(Character ch: list)
+        for(Character ch: arrayList)
         {
             builder.append(ch);
         }
@@ -400,14 +927,14 @@ public class WordFind
     }
 
     /***********************************************************
-    * Function Name: updateComparisonSumString
-    * Description: Adds an integer into a string for storing
-    * Input: Int
-    * Output: String
+    * Function Name: UpdateComparisonSumString
+    * Description: Parses string to int, adds an int, and converts back to string
+    * Input: String, Int
+    * Output: String with new int sum stored 
     ***********************************************************/
-    public static String updateComparisonSumString(String s, int y)
+    public static String UpdateComparisonSumString(String s, int y)
     {
-        // change String to int
+        // parse String to int
         int i = Integer.parseInt(s);
         // add y 
         i = i + y; 
