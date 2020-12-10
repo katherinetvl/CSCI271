@@ -99,4 +99,53 @@ public class PuzzleBoard
             System.out.println("\n");
         }
     }
+
+    // Checks if jump is valid 
+    public boolean isValidMove(char[] arrBoard, int[][] moveMatrix, int currBoardPeg)
+    {
+        boolean isValidMove = false;
+        int rowSize = 36; 
+
+        for(int i = 0; i < rowSize; i++)
+        {
+            int[] moveRow = moveMatrix[i];
+
+            for(int j = 0; j < moveRow.length; j++)
+            {
+                int first = moveRow[0];
+                int second = moveRow[1];
+                int third = moveRow[2];
+                if (first == currBoardPeg)
+                {
+                    if (arrBoard[first] == 'O' && arrBoard[second] == '-' && arrBoard[third] == '-')
+                    {
+                        isValidMove = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return isValidMove; 
+    }
+
+    // Performs a jump
+    public void pegJump(int jumpingP, int removedP, int newPegPosition)
+    {
+        for(int i = 0; i < 15; i++)
+        {
+            if(i == jumpingP)
+            {
+                boardAsArray[i] = '-';
+            }
+            if(i == removedP)
+            {
+                boardAsArray[i] = '-';
+            }
+            if(i == newPegPosition)
+            {
+                boardAsArray[i] = 'O';
+            }
+        }
+    }
+
 }

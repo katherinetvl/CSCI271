@@ -29,7 +29,7 @@ public class PuzzlePegs
         { 14, 9, 5 }, { 14, 13,12 } 
         };
 
-        public ArrayList<Integer> puzzleSolution = new ArrayList<Integer>();
+        public ArrayList<Integer> solutionArray = new ArrayList<Integer>();
 
         if(args.length > 0)
         {
@@ -72,8 +72,6 @@ public class PuzzlePegs
             // no user defined command line arguments
             PuzzleBoard boardType0 = new PuzzleBoard();
             boardType0.printBoard();
-
-
             
         }
 
@@ -85,6 +83,7 @@ public class PuzzlePegs
  ***************************************************************/
 /***************************************************************
     * Function name: IsValidInt 
+    * Function type: boolean
     * Input: string 
     * Output: true if parsed string integer
  ***************************************************************/
@@ -109,62 +108,12 @@ public class PuzzlePegs
     }
 
 /***************************************************************
-    * Function name: PegJump 
-    * Input: char[] board array before jump 
-    * Output: char[] board array after jump 
- ***************************************************************/
-    public static char[] PegJump(char[] boardArray, int jumpingP, int removedP, int newPegPosition)
-    {
-        for(int i = 0; i < 15; i++)
-        {
-            if(i == jumpingP)
-            {
-                boardArray[i] = '-';
-            }
-            if(i == removedP)
-            {
-                boardArray[i] = '-';
-            }
-            if(i == newPegPosition)
-            {
-                boardArray[i] = 'O';
-            }
-        }
-        return boardArray;
-    }
-
-    public boolean isValidMove(char[] arrBoard, int[][] moveMatrix, int currBoardPeg)
-    {
-        boolean hasValidMove = false;
-        int rowSize = 36; 
-
-        for(int i = 0; i < rowSize; i++)
-        {
-            int[] moveRow = moveMatrix[i];
-
-            for(int j = 0; j < moveRow.length; j++)
-            {
-                int first = moveRow[0];
-                int second = moveRow[1];
-                int third = moveRow[2];
-                if (first == currBoardPeg)
-                {
-                    if (arrBoard[first] == 'O' && arrBoard[second] == '-' && arrBoard[third] == '-')
-                    {
-                        hasValidMove = true;
-                        break;
-                    }
-                }
-            }
-        }
-        return hasValidMove; 
-    }
-/***************************************************************
     * Function name: RecursiveJumpSolution
     * Input: PuzzleBoard board, int[][] moveMatrix, ArrayList pegsMoved
-    * Output: No solution or ArrayList with solution
+    * Output: Solution if no moves available and appropriate one peg remains
+              Else, no solution
  ***************************************************************/
-  /*  public static ArrayList RecursiveJumpSolution(PuzzleBoard arrBoard, int[][] moveMatrix, ArrayList pegsMoved)
+  /*  public static void RecursiveJumpSolution(PuzzleBoard arrBoard, int[][] moveMatrix, ArrayList pegsMoved)
     {
         for(int i = 0; i < arrBoard.boardLength(); i++)
         {
