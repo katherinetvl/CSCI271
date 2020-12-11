@@ -101,31 +101,25 @@ public class PuzzleBoard
     }
 
     // Checks if jump is valid 
-    public boolean isValidMove(char[] arrBoard, int[][] moveMatrix, int currBoardPeg)
+    public boolean isValidMove(int first, int second, int third)
     {
         boolean isValidMove = false;
-        int rowSize = 36; 
 
-        for(int i = 0; i < rowSize; i++)
+        if (boardAsArray[first] == 'O' && boardAsArray[second] == 'O' && boardAsArray[third] == '-')
         {
-            int[] moveRow = moveMatrix[i];
-
-            for(int j = 0; j < moveRow.length; j++)
-            {
-                int first = moveRow[0];
-                int second = moveRow[1];
-                int third = moveRow[2];
-                if (first == currBoardPeg)
-                {
-                    if (arrBoard[first] == 'O' && arrBoard[second] == '-' && arrBoard[third] == '-')
-                    {
-                        isValidMove = true;
-                        break;
-                    }
-                }
-            }
+            isValidMove = true;
         }
         return isValidMove; 
+    }
+
+    // Checks if any jump is valid
+    public boolean noValidMoves(int[][] allPossibleMoves)
+    {
+        boolean noValidMoves = false;
+
+
+
+        return noValidMoves;
     }
 
     // Performs a jump
@@ -146,6 +140,7 @@ public class PuzzleBoard
                 boardAsArray[i] = 'O';
             }
         }
+        length = length -1; 
     }
 
 }
