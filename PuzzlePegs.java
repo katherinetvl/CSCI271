@@ -31,7 +31,7 @@ public class PuzzlePegs
 
         // int rowSize = 36;
 
-        ArrayList<Integer[]> solutionArray = new ArrayList<>();
+        ArrayList<Integer> solutionArray = new ArrayList<>();
         // int countJumps = 0; 
 
         if(args.length > 0)
@@ -49,6 +49,20 @@ public class PuzzlePegs
                 int endPeg = Integer.parseInt(args[1]) - 1;
                 PuzzleBoard boardType2 = new PuzzleBoard(startPeg, endPeg);
                 boardType2.printBoard();
+
+                int numPegs = boardType2.pegCount();
+                int solution = RecursiveJumpSolution(boardType2, validMoves, solutionArray, numPegs, endPeg);
+    
+                if(solution == 0)
+                {
+                    System.out.println("Solution completed.");
+                }
+                else
+                {
+                    System.out.println("No solution found.");
+                }
+
+
             }
             else if(args.length == 1)
             {
@@ -63,6 +77,19 @@ public class PuzzlePegs
                 int startPeg = Integer.parseInt(args[0]) - 1;
                 PuzzleBoard boardType1 = new PuzzleBoard(startPeg);
                 boardType1.printBoard();
+
+                int numPegs = boardType1.pegCount();
+                int solution = RecursiveJumpSolution(boardType1, validMoves, solutionArray, numPegs);
+    
+                if(solution == 0)
+                {
+                    System.out.println("Solution completed.");
+                }
+                else
+                {
+                    System.out.println("No solution found.");
+                }
+
             }
             else 
             {
@@ -81,14 +108,10 @@ public class PuzzlePegs
             if(solution == 0)
             {
                 System.out.println("Solution completed.");
-                System.out.println("The steps: ");
-                PrintArrayList(boardType0, solutionArray, validMoves);
             }
             else
             {
                 System.out.println("No solution found.");
-                System.out.println("The steps thus leading to decision: ");
-                PrintArrayList(boardType0, solutionArray, validMoves);
             }
         }
 
@@ -130,7 +153,7 @@ public class PuzzlePegs
     * Output: Solution if no moves available and appropriate one peg remains
               Else, no solution
  ***************************************************************/
-  public static int RecursiveJumpSolution(PuzzleBoard arrBoard, int[][] moveMatrix, ArrayList<Integer[]> pegsMoved, int currPegs)
+  public static int RecursiveJumpSolution(PuzzleBoard arrBoard, int[][] moveMatrix, ArrayList<Integer> pegsMoved, int currPegs)
     {
         if(currPegs == 1)
         {
@@ -152,14 +175,20 @@ public class PuzzlePegs
                     int col2 = moveRow[1];
                     int col3 = moveRow[2];
     
-                    Integer[] currMove = {col1, col2, col3};
                     if(arrBoard.isValidMove(col1, col2, col3))
                     {
+                        int one = col1 + 1;
+                        int two = col2 + 1;
+                        int three = col3 + 1;
+
                         arrBoard.pegJump(col1, col2, col3);        
                         arrBoard.printBoard();
                         currPegs = currPegs - 1;
                         // System.out.println(currPegs);
-                        pegsMoved.add(currMove);
+                        System.out.println(one + " " + two + " " + three);
+                        pegsMoved.add(one);
+                        pegsMoved.add(two);
+                        pegsMoved.add(three);
                     }
                 }
             }
@@ -167,42 +196,55 @@ public class PuzzlePegs
         }
     }
 /***************************************************************
-* Function name: PrintArrayList
-* Input: PuzzleBoard puzzle board, int[][] possible moves, ArrayList for solution, int number of pegs in board
-* Output: Solution if no moves available and appropriate one peg remains
-            Else, no solution
+    * Function name: RecursiveJumpSolution
+    * Input: PuzzleBoard puzzle board, int[][] possible moves, ArrayList for solution, 
+    *        int number of pegs in board, int location of last peg 
+    * Output: Solution if no moves available and appropriate one peg remains
+              Else, no solution
  ***************************************************************/
-public static void PrintArrayList(PuzzleBoard arrBoard, ArrayList<Integer[]> pegsMoved, int[][] movesMade)
+public static int RecursiveJumpSolution(PuzzleBoard arrBoard, int[][] moveMatrix, ArrayList<Integer> pegsMoved, int currPegs, int lastPegLoc)
+{
+    int arrLastPegLoc = arrBoard.getEndPegLoc();
+    if(currPegs == 1 && arrLastPegLoc == lastPegLoc)
     {
-
-        for (int i = 0; i < pegsMoved.size(); i++)
+        return 0;
+    }
+    else if(currPegs == 1 || arrBoard.noValidMoves(moveMatrix))
+    {
+        return 1;
+    }
+    else
+    {
+        for(int i = 0; i < 36; i++)
         {
-            Integer[] rowOfMoves = pegsMoved.get(i);
+            int[] moveRow = moveMatrix[i];
 
-            for(int j = 0; j < 36; j++)
+            for(int j = 0; j < moveRow.length; j++)
             {
-                int[] moveRow = movesMade[j];
-    
-                for(int k = 0; k < moveRow.length; k++)
+                int col1 = moveRow[0];
+                int col2 = moveRow[1];
+                int col3 = moveRow[2];
+
+                if(arrBoard.isValidMove(col1, col2, col3))
                 {
-                    int col1 = moveRow[0];
-                    int col2 = moveRow[1];
-                    int col3 = moveRow[2];
-    
-                    Integer[] currMove = {col1, col2, col3};
-                    if(currMove == rowOfMoves)
-                    {
-                        System.out.println("Moves go here");
-                        System.out.println(col1 + " " + col2 + " " + col3);
-                        System.out.print("\n");
-                    }
-                    System.out.println(moveRow);
+                    int one = col1 + 1;
+                    int two = col2 + 1;
+                    int three = col3 + 1;
+
+                    arrBoard.pegJump(col1, col2, col3);        
+                    arrBoard.printBoard();
+                    currPegs = currPegs - 1;
+                    // System.out.println(currPegs);
+                    System.out.println(one + " " + two + " " + three);
+                    pegsMoved.add(one);
+                    pegsMoved.add(two);
+                    pegsMoved.add(three);
                 }
             }
-
-            System.out.println(rowOfMoves);
         }
-
-
+        return RecursiveJumpSolution(arrBoard, moveMatrix, pegsMoved, currPegs);
     }
+}
+
+
 } // End public class pegs
