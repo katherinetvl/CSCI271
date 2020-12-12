@@ -2,7 +2,6 @@ public class PuzzleBoard
 {
     private int endPegLoc = -1;
     private int totalPegCount;
-    private int length;
     private char[] boardAsArray;
 
     // Constructors
@@ -19,7 +18,6 @@ public class PuzzleBoard
                 }
             }
         }
-        totalPegCount = 14;
     }
 
     public PuzzleBoard(int x) 
@@ -35,7 +33,6 @@ public class PuzzleBoard
                 }
             }
         }
-        totalPegCount = 14;
     }
 
     public PuzzleBoard(int m, int n) 
@@ -53,10 +50,10 @@ public class PuzzleBoard
                 }
             }
         }
-        totalPegCount = 14;
         setEndPegLoc(n);
     }
 
+    // User specified end peg location
     public void setEndPegLoc(int endPegLoc) 
     {
         this.endPegLoc = endPegLoc;
@@ -70,15 +67,14 @@ public class PuzzleBoard
     // Return peg count
     public int pegCount() 
     {
-        totalPegCount = 0; 
+        for (int i = 0; i < 15; i++) 
+        {
+            if(boardAsArray[i] == 'O')
+            {
+                totalPegCount++;
+            }
+        }
         return totalPegCount;
-    }
-
-    // Return board size 
-    public int boardLength()
-    {
-        length = 15;
-        return length; 
     }
 
     // Print board status
@@ -115,11 +111,30 @@ public class PuzzleBoard
     // Checks if any jump is valid
     public boolean noValidMoves(int[][] allPossibleMoves)
     {
-        boolean noValidMoves = false;
+        int rowSize = 36;
+        int nope = 0;
 
+        for(int i = 0; i < rowSize; i++)
+        {
+            int[] moveRow = allPossibleMoves[i];
 
+            for(int j = 0; j < moveRow.length; j++)
+            {
+                int first = moveRow[0];
+                int second = moveRow[1];
+                int third = moveRow[2];
+                if (boardAsArray[first] == 'O' && boardAsArray[second] == 'O' && boardAsArray[third] == '-')
+                {
+                    nope++;
+                }
+            }
+        }
+        if(nope > 1)
+        {
+            return false;
+        }
 
-        return noValidMoves;
+        return true;
     }
 
     // Performs a jump
@@ -140,7 +155,26 @@ public class PuzzleBoard
                 boardAsArray[i] = 'O';
             }
         }
-        length = length -1; 
     }
+
+        // Undo a jump 
+        public void undoJump(int jumpingP, int removedP, int newPegPosition)
+        {
+            for(int i = 0; i < 15; i++)
+            {
+                if(i == jumpingP)
+                {
+                    boardAsArray[i] = 'O';
+                }
+                if(i == removedP)
+                {
+                    boardAsArray[i] = 'O';
+                }
+                if(i == newPegPosition)
+                {
+                    boardAsArray[i] = '-';
+                }
+            }
+        }
 
 }
